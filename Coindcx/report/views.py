@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib import messages
 from django.http import HttpResponse
 import requests
@@ -34,6 +34,17 @@ def generate_rpt(request):
             return render(request,'report/upload.html')
     else:
         return render(request,'report/upload.html')
+
+def sample_rpt(request):
+  file_path = staticfiles_storage.path('Order_history.csv')
+  df = pd.read_csv(file_path) 
+  coin,chart_values,table_data = file_processing(df)
+  data = {
+    'Coin':coin,
+    'chart_values':chart_values,
+    'table_data':table_data
+  }
+  return render(request,'report/report.html',context = data)
 
 
 # Data processing from the file
